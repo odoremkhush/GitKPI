@@ -74,7 +74,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" variant="floating">
       <SidebarContent>
         <div className="w-full flex justify-end items-center pt-3 pr-2">
-          <SidebarTrigger />
+          <SidebarTrigger variant="default" />
         </div>
 
 
@@ -110,7 +110,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Button>
+        <Button variant = "destructive">
           <Settings className="" />
           <span className={state === "collapsed" ? "hidden" : ""}>Logout</span>
         </Button>

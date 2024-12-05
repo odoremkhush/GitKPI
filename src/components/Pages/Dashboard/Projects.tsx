@@ -10,9 +10,9 @@ export default function Projects() {
 
 
     return (
-        <div className="w-full justify-between min-w-full  h-screen p-6 truncate">
+        <div className="justify-between min-w-full p-9 truncate">
                 <h1 className='text-3xl font-bold'>
-                    {'Pr'}
+                    {'Projects'}
                 </h1>
                 <span className='flex items-center'>
                     <Button>{'Download'}</Button>
