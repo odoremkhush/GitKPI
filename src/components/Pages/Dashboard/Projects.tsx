@@ -10,13 +10,15 @@ export default function Projects() {
 
 
     return (
-        <div className="justify-between min-w-full p-9 truncate">
+        <div className="w-full p-9">
+            <div className="w-full flex justify-start p-3">
                 <h1 className='text-3xl font-bold'>
-                    {'Projects'}
+                    {'Summary'}
                 </h1>
-                <span className='flex items-center'>
-                    <Button>{'Download'}</Button>
-                </span>
+
+            </div>
+
+            <hr style={{ border: "1px solid #cccccc", width: "100%" }} />
         </div>
     )
 }

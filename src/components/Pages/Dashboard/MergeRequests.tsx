@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+import { ColTypes, columns, DataTable } from "@/components/mergeComponents/table";
+import { format } from "date-fns";
+
 import axios from "axios";
 import { MultiSelect } from "@/components/ui/multiselect";
 
@@ -108,6 +111,7 @@ export function ComboboxDemo(props: any) {
 
 export default function MergeRequests() {
 
+
     const [projects, setProjects] = useState<any>([]);
     const [selectedProject, setSelectedProject] = useState<any>({});
 
@@ -206,7 +210,7 @@ export default function MergeRequests() {
     }, [selectedProject]);
 
     useEffect(() => {
-        let url:string = `${GITLAB_URL}/projects/${selectedProject.value}/merge_requests/`;
+        let url: string = `${GITLAB_URL}/projects/${selectedProject.value}/merge_requests/`;
         let params: any = {};
         if (selectedLabels.length > 0) {
             params['state'] = selectedLabels.join(',');
@@ -231,16 +235,19 @@ export default function MergeRequests() {
                         iid: mr.iid,
                         title: mr.title,
                         state: mr.state,
-                        created_at: mr.created_at,
-                        updated_at: mr.updated_at,
+                        created_at: format(new Date(mr.created_at), 'dd/MM/yyyy'),
+                        updated_at: format(new Date(mr.updated_at), 'dd/MM/yyyy'),
                         labels: mr.labels,
+                        author: mr.author.name,
+                        author_id: mr.author.id,
                     }));
                     setTableData(tempData);
-            }})
+                }
+            })
             .catch((error: any) => {
                 console.log(error);
             });
-        
+
     }, [selectedUsers, selectedProject, fromDate, endDate, selectedLabels]);
 
 
@@ -292,10 +299,10 @@ export default function MergeRequests() {
                                 <ComboboxDemo projects={labels} selectedProject={selectedLabels} setSelectedProject={setSelectedLabels} placeholder="label" />
 
                                 <Label className="pl-2">Start Date</Label>
-                                <DatePickerDemo date={fromDate} setDate={setFromDate} dateChanged = {fromDateChanged} setDateChanged = {setFromDateChanged} />
+                                <DatePickerDemo date={fromDate} setDate={setFromDate} dateChanged={fromDateChanged} setDateChanged={setFromDateChanged} />
 
                                 <Label className="pl-2">End Date</Label>
-                                <DatePickerDemo date={endDate} setDate={setEndDate}  dateChanged = {endDateChanged} setDateChanged = {setEndDateChanged}/>
+                                <DatePickerDemo date={endDate} setDate={setEndDate} dateChanged={endDateChanged} setDateChanged={setEndDateChanged} />
 
 
 
@@ -304,6 +311,9 @@ export default function MergeRequests() {
 
                     </CardContent>
                 </Card>
+                <div className="container flex-grow mx-auto  pr-6">
+                    <DataTable columns={columns} data={tableData} />
+                </div>
             </div>
 
 
