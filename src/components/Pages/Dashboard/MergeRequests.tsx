@@ -38,6 +38,7 @@ import {
     CommandItem,
     CommandList,
 } from "@/components/ui/command"
+import { table } from "console";
 
 
 
@@ -45,8 +46,14 @@ import {
 export function ComboboxDemo(props: any) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState<any>("")
+    const { projects, selectedProject, setSelectedProject, placeholder } = props;
 
-    const { projects, selectedProject, setSelectedProject } = props;
+
+    // useEffect(() => {
+    //     console.log(value);
+    //     console.log(selectedProject);
+    // }, [value]);
+
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -59,15 +66,15 @@ export function ComboboxDemo(props: any) {
                 >
                     {value
                         ? projects.find((project: any) => project.label === value)?.label
-                        : "Select project.."}
+                        : `Select ${placeholder}..`}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
                 <Command>
-                    <CommandInput placeholder="Search Project." />
+                    <CommandInput placeholder={`Search ${placeholder}.`} />
                     <CommandList>
-                        <CommandEmpty>No Project Found </CommandEmpty>
+                        <CommandEmpty>No {placeholder} Found </CommandEmpty>
                         <CommandGroup>
                             {projects.map((project: any) => (
                                 <CommandItem
@@ -76,6 +83,7 @@ export function ComboboxDemo(props: any) {
                                     onSelect={(currentValue) => {
                                         setValue(currentValue === value ? "" : currentValue);
                                         setOpen(false);
+                                        console.log(currentValue, projects);
                                         setSelectedProject(projects.find((project: any) => project.label === currentValue));
                                     }}
                                 >
@@ -101,13 +109,38 @@ export function ComboboxDemo(props: any) {
 export default function MergeRequests() {
 
     const [projects, setProjects] = useState<any>([]);
-    const [selectedProject, setSelectedProject] = useState<any>(null);
+    const [selectedProject, setSelectedProject] = useState<any>({});
 
     const [users, setUsers] = useState<any>([]);
     const [selectedUsers, setSelectedUsers] = useState<any>([]);
 
     const [fromDate, setFromDate] = useState<Date>(new Date());
     const [endDate, setEndDate] = useState<Date>(new Date());
+
+    const [selectedLabels, setSelectedLabels] = useState<any>([]);
+    const labels: any = [
+        {
+            label: 'all',
+            value: 'all'
+        },
+        {
+            label: 'opened',
+            value: 'opened'
+        },
+        {
+            label: 'closed',
+            value: 'closed'
+        },
+        {
+            label: 'merged',
+            value: 'merged'
+        },
+    ];
+
+    const [fromDateChanged, setFromDateChanged] = useState<boolean>(false);
+    const [endDateChanged, setEndDateChanged] = useState<boolean>(false);
+
+    const [tableData, setTableData] = useState<any>([]);
 
     useEffect(() => {
         axios.get(`${GITLAB_URL}/projects/`, BASE_HEADERS)
@@ -152,11 +185,69 @@ export default function MergeRequests() {
                 console.log(error);
             });
 
+        // axios.get(`${GITLAB_URL}/projects/${selectedProject.value}/merge_requests/`, BASE_HEADERS)
+        //     .then((response: any) => {
+        //         if (response.data) {
+        //             setTableData(response.data.map((mr: any) => ({
+        //                 id: mr.id,
+        //                 iid: mr.iid,
+        //                 title: mr.title,
+        //                 state: mr.state,
+        //                 created_at: mr.created_at,
+        //                 updated_at: mr.updated_at,
+        //                 labels: mr.labels,
+        //                 author: mr.author.name,
+        //                 author_id: mr.author.id,
+        //             })));
+        //         }
+        //     }
+        //     );
+
     }, [selectedProject]);
 
     useEffect(() => {
-        console.log(fromDate);
-    }, [fromDate]);
+        let url:string = `${GITLAB_URL}/projects/${selectedProject.value}/merge_requests/`;
+        let params: any = {};
+        if (selectedLabels.length > 0) {
+            params['state'] = selectedLabels.join(',');
+        }
+        if (selectedUsers.length > 0) {
+            params['author_id'] = selectedUsers.join(',');
+        }
+        if (fromDateChanged) {
+            params['created_after'] = fromDate.toISOString();
+        }
+
+        if (endDateChanged) {
+            params['created_before'] = endDate.toISOString();
+        }
+        console.log(params);
+
+        axios.get(url, { headers: { ...BASE_HEADERS.headers, params } })
+            .then((response: any) => {
+                if (response.data) {
+                    let tempData = response.data.map((mr: any) => ({
+                        id: mr.project_id,
+                        iid: mr.iid,
+                        title: mr.title,
+                        state: mr.state,
+                        created_at: mr.created_at,
+                        updated_at: mr.updated_at,
+                        labels: mr.labels,
+                    }));
+                    setTableData(tempData);
+            }})
+            .catch((error: any) => {
+                console.log(error);
+            });
+        
+    }, [selectedUsers, selectedProject, fromDate, endDate, selectedLabels]);
+
+
+    useEffect(() => {
+        console.log(tableData);
+    }, [tableData]);
+
 
 
 
@@ -185,23 +276,26 @@ export default function MergeRequests() {
                                 </div> */}
                                 {/* <Label htmlFor="name">Project</Label> */}
 
-                                <Label className = "pl-2">Project</Label>
-                                <ComboboxDemo projects={projects} selectedProject = {selectedProject} setSelectedProject = {setSelectedProject} />
-                                
-                                <Label className = "pl-2" >Authors</Label>
+                                <Label className="pl-2">Project</Label>
+                                <ComboboxDemo projects={projects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} placeholder="project" />
+
+                                <Label className="pl-2" >Authors</Label>
                                 <MultiSelect options={users} onValueChange={function (value: string[]): void {
                                     setSelectedUsers(value);
                                     console.log(value);
                                 }}
-                                variant = "inverted"
-                                placeholder = "Select Users..."
-                                className = "overflow-hidden " />
-                                
-                                <Label className = "pl-2">Start Date</Label>
-                                <DatePickerDemo date = {fromDate} setDate = {setFromDate} />
-                                
-                                <Label className = "pl-2">End Date</Label>
-                                <DatePickerDemo date = {endDate} setDate = {setEndDate}/>
+                                    variant="inverted"
+                                    placeholder="Select Users..."
+                                    className="overflow-hidden " />
+
+                                <Label className="pl-2">Labels</Label>
+                                <ComboboxDemo projects={labels} selectedProject={selectedLabels} setSelectedProject={setSelectedLabels} placeholder="label" />
+
+                                <Label className="pl-2">Start Date</Label>
+                                <DatePickerDemo date={fromDate} setDate={setFromDate} dateChanged = {fromDateChanged} setDateChanged = {setFromDateChanged} />
+
+                                <Label className="pl-2">End Date</Label>
+                                <DatePickerDemo date={endDate} setDate={setEndDate}  dateChanged = {endDateChanged} setDateChanged = {setEndDateChanged}/>
 
 
 
