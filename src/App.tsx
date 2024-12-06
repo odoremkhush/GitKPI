@@ -6,7 +6,7 @@ import MergeRequests from "./components/Pages/Dashboard/MergeRequests.tsx";
 import Summary from "./components/Pages/Dashboard/Summary.tsx";
 import Users from "./components/Pages/Dashboard/Users.tsx";
 import Visualization from "./components/Pages/Dashboard/Visualization.tsx";
-import LoginComponent from "./components/Pages/Dashboard/Login.tsx";
+import Login from "./components/Pages/Login/Login.tsx";
 
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
         <Route path = "/summary" element={<Layout><Summary /></Layout>} />
         <Route path = "/users" element={<Layout><Users /></Layout>} />
         <Route path = "/visualization" element={<Layout><Visualization /></Layout>} />
-        <Route path = "/signup" element={<LoginComponent />} />
+        <Route path = "/signup" element={<Login />} />
         
       </Routes>
     </Router>

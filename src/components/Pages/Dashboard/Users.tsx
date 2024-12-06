@@ -5,7 +5,7 @@ export default function Users() {
     return (
         <div className="w-full p-9">
             <div className="w-full flex justify-start p-3">
-                <h1 className='text-3xl font-bold'>
+                <h1 className='text-4xl font-bold'>
                     {'Users'}
                 </h1>
 

@@ -12,8 +12,8 @@ export default function Projects() {
     return (
         <div className="w-full p-9">
             <div className="w-full flex justify-start p-3">
-                <h1 className='text-3xl font-bold'>
-                    {'Summary'}
+                <h1 className='text-4xl font-bold'>
+                    {'Projects'}
                 </h1>
 
             </div>

@@ -246,7 +246,7 @@ export default function Visualization() {
     return (
         <div className="w-full p-9">
             <div className="w-full flex justify-between p-3">
-                <h1 className='text-3xl font-bold'>
+                <h1 className='text-4xl font-bold'>
                     {'Visualization'}
                 </h1>
                 <span className='flex items-center'>
