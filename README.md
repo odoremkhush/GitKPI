@@ -1,50 +1,27 @@
-# React + TypeScript + Vite
+# GitLab Merge Request KPI Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project utilizes the GitLab APIs to fetch merge requests and calculate user efficiency based on their merge request activity. It provides a Key Performance Indicator (KPI) dashboard to measure and visualize team members' contributions and performance.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Fetch merge requests from GitLab repositories.
+- Analyze user activity and calculate efficiency metrics based on merge request data.
+- Generate KPIs for individual team members, including:
+  - Number of merge requests created, reviewed, and merged.
+  - Average time to merge.
+  - Lines of code added/removed.
+- Customizable metrics to suit team requirements.
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- A GitLab account and access token with permissions to read merge requests.
+- [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
+- A backend server (e.g., Python, Node.js, or your preferred language) for API interaction and data processing.
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone the repository:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+   ```bash
+   git clone https://github.com/your-username/gitlab-kpi-tracker.git
+   cd gitlab-kpi-tracker
