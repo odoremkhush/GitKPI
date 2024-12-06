@@ -146,7 +146,7 @@ export default function Visualization() {
         if (users.length > 0) {
             console.log('users', users);
             let data: any = users.map((user: any) => {
-                axios.get(`${GITLAB_URL}/projects/${selectedProject.value}/merge_requests?author_id=${user?.id}&state=all`, BASE_HEADERS)
+                axios.get(`${GITLAB_URL}/projects/${selectedProject.value}/merge_requests?author_id=${user?.id}&state=all`, BASE_HEADERS(null))
                     .then((response: any) => {
                         try {
                             if (response.data) {
@@ -190,7 +190,7 @@ export default function Visualization() {
 
         setTableData((tableData: any) => []);
         if (selectedProject.value) {
-            axios.get(`${GITLAB_URL}/projects/${selectedProject.value}/members/all`, BASE_HEADERS)
+            axios.get(`${GITLAB_URL}/projects/${selectedProject.value}/members/all`, BASE_HEADERS(null))
                 .then((response: any) => {
                     try {
                         if (response.data) {
@@ -220,7 +220,7 @@ export default function Visualization() {
 
 
     useEffect(() => {
-        axios.get(`${GITLAB_URL}/projects/`, BASE_HEADERS)
+        axios.get(`${GITLAB_URL}/projects/`, BASE_HEADERS(null))
             .then((response: any) => {
                 try {
                     if (response.data) {

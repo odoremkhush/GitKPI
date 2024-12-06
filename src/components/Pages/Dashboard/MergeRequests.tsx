@@ -147,7 +147,7 @@ export default function MergeRequests() {
     const [tableData, setTableData] = useState<any>([]);
 
     useEffect(() => {
-        axios.get(`${GITLAB_URL}/projects/`, BASE_HEADERS)
+        axios.get(`${GITLAB_URL}/projects/`, BASE_HEADERS())
             .then((response: any) => {
                 try {
                     if (response.data) {

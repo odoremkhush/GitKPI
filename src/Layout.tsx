@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/sidebar"
 import { useEffect } from "react"
 
+import axios from "axios"
+
+import { BASE_HEADERS, GITLAB_URL } from "@/constants"
 
 
 export function AppSidebar() {
@@ -110,7 +113,13 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Button variant = "destructive">
+        <Button variant = "destructive" onClick = {
+          () => {
+            localStorage.removeItem('username')
+            localStorage.removeItem('private_key')
+            navigate('/login')
+          } 
+        }>
           <Settings className="" />
           <span className={state === "collapsed" ? "hidden" : ""}>Logout</span>
         </Button>
@@ -121,6 +130,32 @@ export function AppSidebar() {
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+
+  
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const username = localStorage.getItem('username')
+    const private_key = localStorage.getItem('private_key')
+    axios.get(`${GITLAB_URL}/user`, BASE_HEADERS(private_key))
+      .then(
+        (response: any) => {
+          if (response.data) {
+            if (response.data.username !== username) {
+              navigate('/login')
+            }
+          }
+          else {
+            navigate('/login')
+          }
+        }
+      )
+      .catch((error: any) => {
+        console.log(error)
+        navigate('/login')
+      })
+  }, []);
   return (
     <SidebarProvider>
       <AppSidebar />
