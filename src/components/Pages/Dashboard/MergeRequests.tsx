@@ -42,6 +42,7 @@ import {
     CommandList,
 } from "@/components/ui/command"
 import { table } from "console";
+import { useLocation } from "react-router-dom";
 
 
 
@@ -111,6 +112,8 @@ export function ComboboxDemo(props: any) {
 
 export default function MergeRequests() {
 
+    const location = useLocation();
+
 
     const [projects, setProjects] = useState<any>([]);
     const [selectedProject, setSelectedProject] = useState<any>({});
@@ -147,7 +150,7 @@ export default function MergeRequests() {
     const [tableData, setTableData] = useState<any>([]);
 
     useEffect(() => {
-        axios.get(`${GITLAB_URL}/projects/`, BASE_HEADERS())
+        axios.get(`${GITLAB_URL}/projects/`, BASE_HEADERS(null))
             .then((response: any) => {
                 try {
                     if (response.data) {
@@ -155,6 +158,16 @@ export default function MergeRequests() {
                             label: project.name,
                             value: project.id,
                         })));
+
+                        if (location.state?.selectedProject) {
+                            let projectSelect = response.data.find((project: any) => project.id === location.state?.selectedProject?.id);
+                            if (projectSelect) {
+                                setSelectedProject({
+                                    label: projectSelect.name,
+                                    value: projectSelect.id,
+                                });
+                            }
+                        }
                     }
                 }
                 catch (e) {
@@ -174,7 +187,7 @@ export default function MergeRequests() {
         if (!selectedProject) {
             return;
         }
-        axios.get(`${GITLAB_URL}/projects/${selectedProject.value}/members/all`, BASE_HEADERS)
+        axios.get(`${GITLAB_URL}/projects/${selectedProject.value}/members/all`, BASE_HEADERS(null))
             .then((response: any) => {
                 if (response.data) {
                     setUsers(response.data.map((user: any) => ({
@@ -227,7 +240,7 @@ export default function MergeRequests() {
         }
         console.log(params);
 
-        axios.get(url, { headers: { ...BASE_HEADERS.headers, params } })
+        axios.get(url, { headers: { ...BASE_HEADERS(null).headers }, params })
             .then((response: any) => {
                 if (response.data) {
                     let tempData = response.data.map((mr: any) => ({
