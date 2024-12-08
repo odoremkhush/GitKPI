@@ -222,6 +222,23 @@ export default function MergeRequests() {
 
     }, [selectedProject]);
 
+    
+    const formatCell = (value:any) => `"${value}"`; 
+
+    const downloadTableData = () => {
+        let csv = 'Project,MR ID,Title,State,Created At,Updated At,Labels,Author,Author ID\n';
+        tableData.forEach((row: any) => {
+
+            csv += `${selectedProject.label},${row.iid},${formatCell(row.title)},${row.state},${row.created_at},${row.updated_at},${formatCell(row.labels)},${formatCell(row.author)},${row.author_id}\n`;
+        });
+
+        const hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = 'merge_requests.csv';
+        hiddenElement.click();
+    }
+
     useEffect(() => {
         let url: string = `${GITLAB_URL}/projects/${selectedProject.value}/merge_requests/`;
         let params: any = {};
@@ -278,7 +295,7 @@ export default function MergeRequests() {
                     {'Merge Requests'}
                 </h1>
                 <span className='flex items-center'>
-                    <Button>{'Download'}</Button>
+                    <Button onClick = {downloadTableData}>{'Download'}</Button>
                 </span>
 
             </div>

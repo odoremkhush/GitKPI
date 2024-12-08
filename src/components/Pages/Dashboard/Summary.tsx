@@ -136,6 +136,22 @@ export default function Summary() {
     useEffect(() => {
         console.log(tableData);
     }, [tableData]);
+    
+    const downloadTableData = () => {
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Author,Total Pull Requests,Merged Pull Requests,Rejected Pull Requests,Timeliness Score,Quality Score,Total Score,Normalized Score\n";
+        tableData.forEach((row) => {
+            const formatCell = (value:any) => `"${value}"`; 
+            let rowString = `${row.author},${row.total_prs}, ${row.merged_prs} ${row.rejected_prs},${row.timeliness_score},${row.quality_score},${row.total_score},${row.normalized_score}\n`;
+            csvContent += rowString;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `summary-${selectedProject.label}.csv`);
+        document.body.appendChild(link); // Required for FF
+        link.click();
+    };
 
     useEffect(() => {
         if (users.length > 0) {
@@ -244,7 +260,13 @@ export default function Summary() {
                 <h1 className='text-4xl font-bold'>
                     {'Summary'}
                 </h1>
-                <ComboboxDemo projects={projects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} placeholder="project" nClass="w-[180px]" />
+
+                <span className='flex items-center'>
+                    <Button onClick = {downloadTableData}>{'Download'}</Button>
+                    <span className="pl-4">
+                        <ComboboxDemo projects={projects} selectedProject={selectedProject} setSelectedProject={setSelectedProject} placeholder="project" nClass="w-[180px]" />
+                    </span>
+                </span>
 
             </div>
 
