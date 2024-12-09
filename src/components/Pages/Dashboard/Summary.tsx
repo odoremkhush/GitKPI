@@ -116,6 +116,9 @@ export default function Summary() {
 
     const [projects, setProjects] = useState<any>([]);
     const [selectedProject, setSelectedProject] = useState<any>({});
+    const [rejectedWeight, setRejectedWeight] = useState<number>(50.0);
+    const [considerOpen, setConsiderOpen] = useState<boolean>(false);
+    const [openWeight, setOpenWeight] = useState<number>(50.0);
 
 
     const [users, setUsers] = useState<any>([]);
@@ -153,6 +156,13 @@ export default function Summary() {
         link.click();
     };
 
+    function calculateOnTimeScore(prs: any) {
+
+
+
+        return 0;
+    }
+
     useEffect(() => {
         if (users.length > 0) {
             console.log('users', users);
@@ -164,7 +174,7 @@ export default function Summary() {
                                 let total_prs = response.data.length;
                                 let merged_prs = response.data.filter((pr: any) => pr.state === 'merged').length;
                                 let rejected_prs = response.data.filter((pr: any) => pr.state === 'closed').length;
-                                let timeliness_score = 0;
+                                let timeliness_score = calculateOnTimeScore(response.data);
                                 let quality_score = 0;
                                 let total_score = 0;
                                 let normalized_score = 0;

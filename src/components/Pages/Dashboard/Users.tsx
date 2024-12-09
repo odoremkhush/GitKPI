@@ -6,7 +6,7 @@ export default function Users() {
         <div className="w-full p-9">
             <div className="w-full flex justify-start p-3">
                 <h1 className='text-4xl font-bold'>
-                    {'Users'}
+                    {`Users`}
                 </h1>
 
             </div>

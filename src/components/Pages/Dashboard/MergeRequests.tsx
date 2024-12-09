@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/command"
 import { table } from "console";
 import { useLocation } from "react-router-dom";
+import { LoadingSpinner } from '@/components/loginComponents/Loader';
 
 
 
@@ -113,7 +114,7 @@ export function ComboboxDemo(props: any) {
 export default function MergeRequests() {
 
     const location = useLocation();
-
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const [projects, setProjects] = useState<any>([]);
     const [selectedProject, setSelectedProject] = useState<any>({});
@@ -222,8 +223,8 @@ export default function MergeRequests() {
 
     }, [selectedProject]);
 
-    
-    const formatCell = (value:any) => `"${value}"`; 
+
+    const formatCell = (value: any) => `"${value}"`;
 
     const downloadTableData = () => {
         let csv = 'Project,MR ID,Title,State,Created At,Updated At,Labels,Author,Author ID\n';
@@ -272,6 +273,7 @@ export default function MergeRequests() {
                         author_id: mr.author.id,
                     }));
                     setTableData(tempData);
+                    setIsLoading(false);
                 }
             })
             .catch((error: any) => {
@@ -295,7 +297,7 @@ export default function MergeRequests() {
                     {'Merge Requests'}
                 </h1>
                 <span className='flex items-center'>
-                    <Button onClick = {downloadTableData}>{'Download'}</Button>
+                    <Button onClick={downloadTableData}>{'Download'}</Button>
                 </span>
 
             </div>

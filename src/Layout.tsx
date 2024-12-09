@@ -5,6 +5,8 @@ import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
 import { useLocation } from "react-router"
 import { useNavigate } from "react-router-dom"
 
+import { useState } from "react"
+
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +26,8 @@ import { BASE_HEADERS, GITLAB_URL } from "@/constants"
 
 export function AppSidebar() {
 
+  const [username, setUsername] = useState<string|null>(localStorage.getItem('username'))
+  
 
   const location = useLocation()
 
@@ -85,10 +89,10 @@ export function AppSidebar() {
           <div className={`flex items-center space-x-4 p-4 ${state === 'collapsed' ? 'hidden' : ''}`}>
 
             <div className={`w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-lg font-bold transition-all duration-300 ${state === 'collapsed' ? 'w-6 h-6 rounded-full text-sm bg-inherit' : ''}`}>
-              S
+              {(username ?? '').split('.')[0].charAt(0).toUpperCase()}
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Suraj Narayan</h2>
+              <h2 className="text-lg font-semibold">{(username ?? '').split('.').map((word:any) => (word.charAt(0).toUpperCase() + word.slice(1))).join(' ')}</h2>
               <p className="text-sm text-gray-500">Software Engineer</p>
             </div>
           </div>
